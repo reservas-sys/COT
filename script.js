@@ -1,23 +1,29 @@
 /* ==========================================
-   COTIZADOR PRO - VIVANTURA (VERSIÓN FINAL COMPLETA)
+   COTIZADOR PRO - VIVANTURA (VERSIÓN LOCAL + EDITAR)
    ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const ACCESS_PASSWORD = 'HOLA';
 
-    // --- VARIABLES Y ELEMENTOS ---
+    // --- VARIABLES ---
     const loginOverlay = document.getElementById('login-overlay');
     const loginForm = document.getElementById('login-form');
     const passwordInput = document.getElementById('password-input');
     const loginError = document.getElementById('login-error');
     const mainWrapper = document.querySelector('.wrapper');
 
-     const ADVISORS = {
-        'María_Camila': { name: 'María Camila Ramirez Rodas', photoUrl: 'https://i.imgur.com/SdubRgH.jpeg', defaultWhatsapp: '573113173286' },
-        'Sarah_George': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/MCSsvz9.jpeg', defaultWhatsapp: '573332313485' },
-        'Ana_Isabel': { name: 'Ana Isabel Buitrago García', photoUrl: 'https://i.imgur.com/b7LIglY.jpeg', defaultWhatsapp: '573217598780' },
+    const ADVISORS = {
+        'katherine_rueda': { name: 'Katherine Rueda', photoUrl: 'https://i.imgur.com/21GKFPV.png', defaultWhatsapp: '573249450254' },
+        'Daniela_Ardila': { name: 'Daniela Ardila', photoUrl: 'https://i.imgur.com/08PClCm.jpeg', defaultWhatsapp: '573213349780' },
+        'valentina_herrera': { name: 'Valentina Herrera', photoUrl: 'https://i.imgur.com/MHGZASr.png', defaultWhatsapp: '573184188621' },
         'maryory_gonzalez': { name: 'Maryory Gonzalez', photoUrl: 'https://i.imgur.com/G9nHKlg.jpeg', defaultWhatsapp: '573189150322' },
+        'karen_giraldo': { name: 'Karen Giraldo', photoUrl: 'https://i.imgur.com/Amn1Wtb.jpeg', defaultWhatsapp: '573216839241' },
+        'Alexandra_Navarro': { name: 'Alexandra Navarro', photoUrl: 'https://i.imgur.com/J0NYz9p.png', defaultWhatsapp: '573216839241' },
+        'Alejandro_Jimes': { name: 'Alejandro Jaimes', photoUrl: 'https://i.imgur.com/1RuwHv0.jpeg', defaultWhatsapp: '573012033720' },
+        'Daniel_Caballero': { name: 'Daniel Caballero', photoUrl: 'https://i.imgur.com/R2hCbvs.png', defaultWhatsapp: '573113828929' },
+        'sarah_esteves': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/mt1UKBS.jpeg', defaultWhatsapp: '573226817507' },
+        'Daniela_Cardona': { name: 'Daniela Cardona', photoUrl: 'https://i.imgur.com/x2yIHkL.png', defaultWhatsapp: '573226817507' },
         'Carolina_Muñoz': { name: 'Carolina Muñoz', photoUrl: 'https://i.imgur.com/sXnamkJ.jpeg', defaultWhatsapp: '573113855927' }
     };
 
@@ -30,38 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         plane: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>'
     };
 
-    // --- TÉRMINOS Y CONDICIONES COMPLETOS (RESTAURADOS) ---
     const TERMS_AND_CONDITIONS = {
-        flights: `
-            <h3>✈️ Tiquetes Aéreos</h3>
-            <ul>
-                <li>Los valores e itinerarios cotizados están sujetos a cambios y disponibilidad por parte de las aerolíneas sin previo aviso.</li>
-                <li>Los vuelos incluidos en esta cotización son aproximados al momento de su emisión.</li>
-                <li>Para garantizar el valor y el itinerario proporcionado, se debe realizar el <strong>pago total inmediato</strong>.</li>
-                <li>Ninguna aerolínea permite separar, reservar o congelar precios sin el pago completo.</li>
-                <li>En caso de cambio de fecha, nombre del pasajero o cualquier modificación, la aerolínea aplicará penalidades según su política interna.</li>
-                <li>Niños mayores de 2 años cumplidos pagan tarifa de adulto.</li>
-                <li>Los tiquetes se emiten en tarifa básica, la cual incluye únicamente un <strong>artículo personal</strong> (mochila o bolso pequeño). Si deseas adicionar equipaje de mano o de bodega, se podrá incluir posteriormente o solicitar con anticipación. Ten en cuenta que esto genera un costo adicional.</li>
-            </ul>
-        `,
-        hotels: `
-            <h3>🏨 Hoteles</h3>
-            <ul>
-                <li>La reserva hotelera se realiza inicialmente con un pago parcial (separación). El saldo restante deberá estar completamente pagado al menos <strong>45 días antes</strong> de la fecha del viaje.</li>
-                <li>Si deseas modificar la fecha del viaje, se validará primero la disponibilidad en el hotel. En caso de no estar disponible, se intentará mantener el valor en otro hotel de la misma categoría.</li>
-                <li>Si la nueva fecha corresponde a temporada alta y el valor se incrementa, el cliente deberá asumir la diferencia.</li>
-                <li>Niños mayores de 6 años pagan estadía en la mayoría de hoteles, de acuerdo con sus políticas.</li>
-                <li>En caso de que la garantía de 12 meses no sea suficiente y desees extenderla hasta 18 meses, esta extensión está sujeta a aprobación y puede implicar penalidades o ajustes de tarifa.</li>
-                <li>Se permite el cambio de titular de la reserva, siempre y cuando el titular actual lo autorice por escrito y el nuevo titular acepte los términos y condiciones vigentes.</li>
-                <li>Si decides cambiar de un destino internacional a uno nacional y el valor de la separación inicial supera $1.500.000 COP, este valor será dividido para aplicar a dos destinos nacionales.</li>
-            </ul>
-        `,
-        transfers: `
-            <h3>🚐 Traslados</h3>
-            <ul>
-                <li>Si el plan incluye traslados desde el aeropuerto de Punta Cana al hotel en Punta Cana y posteriormente decides comprar vuelos con llegada a Santo Domingo, los traslados adicionales correrán por cuenta del cliente. Esto debido a la diferencia de distancia entre ambas ciudades y el reajuste necesario en la logística.</li>
-            </ul>
-        `
+        flights: `<h3>✈️ Tiquetes Aéreos</h3><ul><li>Los valores e itinerarios cotizados están sujetos a cambios y disponibilidad por parte de las aerolíneas sin previo aviso.</li><li>Los vuelos incluidos en esta cotización son aproximados al momento de su emisión.</li><li>Para garantizar el valor y el itinerario proporcionado, se debe realizar el <strong>pago total inmediato</strong>.</li><li>Ninguna aerolínea permite separar, reservar o congelar precios sin el pago completo.</li><li>En caso de cambio de fecha, nombre del pasajero o cualquier modificación, la aerolínea aplicará penalidades según su política interna.</li><li>Niños mayores de 2 años cumplidos pagan tarifa de adulto.</li><li>Los tiquetes se emiten en tarifa básica, la cual incluye únicamente un <strong>artículo personal</strong> (mochila o bolso pequeño). Si deseas adicionar equipaje de mano o de bodega, se podrá incluir posteriormente o solicitar con anticipación. Ten en cuenta que esto genera un costo adicional.</li></ul>`,
+        hotels: `<h3>🏨 Hoteles</h3><ul><li>La reserva hotelera se realiza inicialmente con un pago parcial (separación). El saldo restante deberá estar completamente pagado al menos <strong>45 días antes</strong> de la fecha del viaje.</li><li>Si deseas modificar la fecha del viaje, se validará primero la disponibilidad en el hotel. En caso de no estar disponible, se intentará mantener el valor en otro hotel de la misma categoría.</li><li>Si la nueva fecha corresponde a temporada alta y el valor se incrementa, el cliente deberá asumir la diferencia.</li><li>Niños mayores de 6 años pagan estadía en la mayoría de hoteles, de acuerdo con sus políticas.</li><li>En caso de que la garantía de 12 meses no sea suficiente y desees extenderla hasta 18 meses, esta extensión está sujeta a aprobación y puede implicar penalidades o ajustes de tarifa.</li><li>Se permite el cambio de titular de la reserva, siempre y cuando el titular actual lo autorice por escrito y el nuevo titular acepte los términos y condiciones vigentes.</li><li>Si decides cambiar de un destino internacional a uno nacional y el valor de la separación inicial supera $1.500.000 COP, este valor será dividido para aplicar a dos destinos nacionales.</li></ul>`,
+        transfers: `<h3>🚐 Traslados</h3><ul><li>Si el plan incluye traslados desde el aeropuerto de Punta Cana al hotel en Punta Cana y posteriormente decides comprar vuelos con llegada a Santo Domingo, los traslados adicionales correrán por cuenta del cliente. Esto debido a la diferencia de distancia entre ambas ciudades y el reajuste necesario en la logística.</li></ul>`
     };
 
     const REGIMEN_TEMPLATES = {
@@ -82,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirmationSection = document.getElementById('confirmation-section');
         const processQuoteBtn = document.getElementById('process-quote-btn');
         const newQuoteBtn = document.getElementById('new-quote-btn');
+        const editQuoteBtn = document.getElementById('edit-quote-btn'); // NUEVO BOTÓN
         const loaderOverlay = document.getElementById('loader-overlay');
         const dynamicComponentsContainer = document.getElementById('dynamic-components-container');
         const confirmationComponentsContainer = document.getElementById('confirmation-components-container');
@@ -149,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
+                // CORRECCIÓN: Busca el wrapper correcto para tours/vuelos/traslados
                 const originalWrapper = document.getElementById(`${sectionKey}-form-wrapper`);
                 if (originalWrapper) {
                     originalWrapper.remove();
@@ -191,9 +171,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const { target } = e;
             const { section, subsection } = target.dataset;
             if (target.matches('.add-section-btn')) addSection(section);
-            if (target.matches('.remove-section-btn')) removeSection(section);
+            // CORRECCIÓN: Verifica si el botón es de eliminar sección
+            if (target.matches('.remove-section-btn')) {
+                // Si el botón tiene data-subsection, es una subsección (vuelo 2)
+                if (target.dataset.subsection) {
+                    removeSubSection(target.dataset.subsection);
+                } else {
+                    // Si no, es una sección principal (hotel, tours, vuelos)
+                    removeSection(section);
+                }
+            }
             if (target.matches('.add-subsection-btn')) addSubSection(section || subsection);
-            if (target.matches('.remove-section-btn[data-subsection]')) removeSubSection(subsection);
         });
 
         function handlePaste(e) {
@@ -396,7 +384,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         form.addEventListener('submit', e => { e.preventDefault(); if (!validateForm()) return; populateQuote(); formTitleSection.style.display = 'none'; formSection.style.display = 'none'; confirmationSection.style.display = 'block'; window.scrollTo(0, 0); });
         processQuoteBtn.addEventListener('click', processQuote);
-        newQuoteBtn.addEventListener('click', () => { confirmationSection.style.display = 'none'; formTitleSection.style.display = 'block'; formSection.style.display = 'block'; initializeForm(); window.scrollTo(0, 0); });
+        
+        // --- LÓGICA DEL BOTÓN NUEVA COTIZACIÓN ---
+        newQuoteBtn.addEventListener('click', () => { 
+            confirmationSection.style.display = 'none'; 
+            formTitleSection.style.display = 'block'; 
+            formSection.style.display = 'block'; 
+            initializeForm(); // Borra todo y empieza de cero
+            window.scrollTo(0, 0); 
+        });
+
+        // --- LÓGICA DEL BOTÓN CORREGIR (NUEVO) ---
+        // Este botón SOLO oculta la confirmación y muestra el formulario de nuevo SIN borrar los datos
+        editQuoteBtn.addEventListener('click', () => {
+            confirmationSection.style.display = 'none';
+            formTitleSection.style.display = 'block';
+            formSection.style.display = 'block';
+            window.scrollTo(0, 0); 
+        });
         
         initializeForm();
     }
