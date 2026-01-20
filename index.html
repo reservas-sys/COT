@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- SOLO LIBRERÍAS DE PDF (SIN FIREBASE NI EMAILJS) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
@@ -16,7 +15,7 @@
 </head>
 <body>
 
-    <!-- SECCIÓN DE LOGIN -->
+    <!-- LOGIN -->
     <div id="login-overlay">
         <div id="login-box">
             <img src="https://i.imgur.com/GiTvvrW.png" alt="Vivantura" class="login-logo">
@@ -47,7 +46,6 @@
                         <div class="form-group"><label for="asesor">Tu Nombre (Asesor)</label><select id="asesor" required></select></div>
                         <div class="form-group"><label for="whatsapp-asesor">Tu WhatsApp (sin +)</label><input type="tel" id="whatsapp-asesor" placeholder="Ej: 573147294382" required></div>
                         <div class="form-group full-width"><label for="nombre-completo">Nombre Completo del Cliente</label><input type="text" id="nombre-completo" placeholder="Escribe el nombre completo" required></div>
-                        <!-- Quitamos el campo email ya que no se enviará correo -->
                         <div class="form-group"><label for="adultos">Adultos</label><select id="adultos"></select></div>
                         <div class="form-group"><label for="ninos">Niños</label><select id="ninos"></select></div>
                         <div class="form-group full-width"><label for="validez-cupos">Validez de la Oferta</label><input type="text" id="validez-cupos" required value="¡Últimos 3 cupos a este precio! Válido por 24 horas."></div>
@@ -74,11 +72,11 @@
                     </div>
                 </fieldset>
                 
-                <button type="submit" class="submit-button">Generar y Descargar Cotización</button>
+                <button type="submit" class="submit-button">Generar Cotización</button>
             </form>
         </section>
 
-        <!-- TEMPLATES INTERNOS -->
+        <!-- TEMPLATES -->
         <template id="template-hotel">
             <div id="hotel-form-wrapper-PLACEHOLDER" class="dynamic-section-wrapper hotel-form-wrapper">
                 <fieldset class="form-fieldset">
@@ -141,7 +139,7 @@
             </fieldset></div>
         </template>
 
-        <!-- SECCIÓN DE CONFIRMACIÓN (PDF) -->
+        <!-- SECCIÓN DE CONFIRMACIÓN -->
         <div id="confirmation-section" style="display: none;">
             <div id="voucher-to-print">
                 <header class="confirmation-header"></header>
@@ -199,8 +197,11 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- BOTONES DE ACCIÓN (CON EDITAR AGREGADO) -->
             <div class="action-buttons">
                 <button class="action-button download" id="process-quote-btn">Descargar Cotización</button>
+                <button class="action-button edit" id="edit-quote-btn">✏️ Corregir / Editar</button>
                 <button class="action-button secondary" id="new-quote-btn">Nueva Cotización</button>
             </div>
         </div>
