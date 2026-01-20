@@ -14,16 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainWrapper = document.querySelector('.wrapper');
 
     const ADVISORS = {
-        'katherine_rueda': { name: 'Katherine Rueda', photoUrl: 'https://i.imgur.com/21GKFPV.png', defaultWhatsapp: '573249450254' },
-        'Daniela_Ardila': { name: 'Daniela Ardila', photoUrl: 'https://i.imgur.com/08PClCm.jpeg', defaultWhatsapp: '573213349780' },
-        'valentina_herrera': { name: 'Valentina Herrera', photoUrl: 'https://i.imgur.com/MHGZASr.png', defaultWhatsapp: '573184188621' },
+        'María_Camila': { name: 'María Camila Ramirez Rodas', photoUrl: 'https://i.imgur.com/SdubRgH.jpeg', defaultWhatsapp: '573113173286' },
+        'Sarah_George': { name: 'Sarah George Steves', photoUrl: 'https://i.imgur.com/MCSsvz9.jpeg', defaultWhatsapp: '573332313485' },
+        'Ana_Isabel': { name: 'Ana Isabel Buitrago García', photoUrl: 'https://i.imgur.com/b7LIglY.jpeg', defaultWhatsapp: '573217598780' },
         'maryory_gonzalez': { name: 'Maryory Gonzalez', photoUrl: 'https://i.imgur.com/G9nHKlg.jpeg', defaultWhatsapp: '573189150322' },
-        'karen_giraldo': { name: 'Karen Giraldo', photoUrl: 'https://i.imgur.com/Amn1Wtb.jpeg', defaultWhatsapp: '573216839241' },
-        'Alexandra_Navarro': { name: 'Alexandra Navarro', photoUrl: 'https://i.imgur.com/J0NYz9p.png', defaultWhatsapp: '573216839241' },
-        'Alejandro_Jimes': { name: 'Alejandro Jaimes', photoUrl: 'https://i.imgur.com/1RuwHv0.jpeg', defaultWhatsapp: '573012033720' },
-        'Daniel_Caballero': { name: 'Daniel Caballero', photoUrl: 'https://i.imgur.com/R2hCbvs.png', defaultWhatsapp: '573113828929' },
-        'sarah_esteves': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/mt1UKBS.jpeg', defaultWhatsapp: '573226817507' },
-        'Daniela_Cardona': { name: 'Daniela Cardona', photoUrl: 'https://i.imgur.com/x2yIHkL.png', defaultWhatsapp: '573226817507' },
         'Carolina_Muñoz': { name: 'Carolina Muñoz', photoUrl: 'https://i.imgur.com/sXnamkJ.jpeg', defaultWhatsapp: '573113855927' }
     };
 
