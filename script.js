@@ -1,395 +1,244 @@
-/* ==========================================
-   COTIZADOR PRO - VIVANTURA (VERSIÓN LOCAL)
-   ========================================== */
+:root {
+    /* === PALETA VIVENTURA === */
+    --c-brand-primary: #FE8050;       /* Coral */
+    --c-brand-dark-accent: #14A7CA;   /* Turquesa */
+    --c-bg-card: #bbe0e4;             /* Azul Pálido (Fondo) */
+    --c-brand-yellow: #FFC300;        /* Amarillo Brillante */
+    
+    /* Neutros */
+    --c-dark-blue: #293241; 
+    --c-dark: #1d1d1f;      
+    --c-gray: #5f5f63;      
+    --c-light-gray: #f4f6f8; 
+    --c-white: #ffffff;
+    --c-success-green: #2ecc71;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
+body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: var(--c-light-gray); color: var(--c-dark); -webkit-font-smoothing: antialiased; }
 
-    const ACCESS_PASSWORD = 'HOLA';
+/* Wrapper Principal */
+.wrapper { 
+    max-width: 800px; 
+    margin: 40px auto; 
+    background-color: var(--c-bg-card); 
+    box-shadow: 0 20px 70px rgba(0,0,0,0.1); 
+    border-radius: 24px; 
+    overflow: hidden; 
+    display: none; /* Se oculta hasta el login */
+}
 
-    // --- VARIABLES Y ELEMENTOS ---
-    const loginOverlay = document.getElementById('login-overlay');
-    const loginForm = document.getElementById('login-form');
-    const passwordInput = document.getElementById('password-input');
-    const loginError = document.getElementById('login-error');
-    const mainWrapper = document.querySelector('.wrapper');
+/* Header Web */
+.header { 
+    background-color: var(--c-bg-card); 
+    padding: 30px; 
+    text-align: center; 
+    border-bottom: 1px solid rgba(0,0,0,0.05); 
+}
+.header img { max-width: 350px; height: auto; }
 
-    const ADVISORS = {
-        'katherine_rueda': { name: 'Katherine Rueda', photoUrl: 'https://i.imgur.com/21GKFPV.png', defaultWhatsapp: '573249450254' },
-        'Daniela_Ardila': { name: 'Daniela Ardila', photoUrl: 'https://i.imgur.com/08PClCm.jpeg', defaultWhatsapp: '573213349780' },
-        'valentina_herrera': { name: 'Valentina Herrera', photoUrl: 'https://i.imgur.com/MHGZASr.png', defaultWhatsapp: '573184188621' },
-        'maryory_gonzalez': { name: 'Maryory Gonzalez', photoUrl: 'https://i.imgur.com/G9nHKlg.jpeg', defaultWhatsapp: '573189150322' },
-        'karen_giraldo': { name: 'Karen Giraldo', photoUrl: 'https://i.imgur.com/Amn1Wtb.jpeg', defaultWhatsapp: '573216839241' },
-        'Alexandra_Navarro': { name: 'Alexandra Navarro', photoUrl: 'https://i.imgur.com/J0NYz9p.png', defaultWhatsapp: '573216839241' },
-        'Alejandro_Jimes': { name: 'Alejandro Jaimes', photoUrl: 'https://i.imgur.com/1RuwHv0.jpeg', defaultWhatsapp: '573012033720' },
-        'Daniel_Caballero': { name: 'Daniel Caballero', photoUrl: 'https://i.imgur.com/R2hCbvs.png', defaultWhatsapp: '573113828929' },
-        'sarah_esteves': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/mt1UKBS.jpeg', defaultWhatsapp: '573226817507' },
-        'Daniela_Cardona': { name: 'Daniela Cardona', photoUrl: 'https://i.imgur.com/x2yIHkL.png', defaultWhatsapp: '573226817507' },
-        'Carolina_Muñoz': { name: 'Carolina Muñoz', photoUrl: 'https://i.imgur.com/sXnamkJ.jpeg', defaultWhatsapp: '573113855927' }
-    };
+/* Secciones */
+.section { padding: 40px; text-align: center; }
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; margin:0; }
+h1 { font-size: 36px; margin-bottom: 10px; color: var(--c-dark-blue); }
+.intro-text { font-size: 16px; color: var(--c-dark-blue); opacity: 0.8; max-width: 600px; margin: 0 auto 25px auto; }
 
-    const ICONS = {
-        destination: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>',
-        calendar: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
-        moon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>',
-        bed: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7h2a2 2 0 012 2v9a2 2 0 01-2 2h-2m-6 0H7a2 2 0 01-2-2V9a2 2 0 012-2h2m4-4h2a2 2 0 012 2v2H9V5a2 2 0 012-2zM9 12h6"></path></svg>',
-        check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>',
-        plane: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>'
-    };
+/* Formularios */
+#form-section { padding-top: 0; }
+form { margin-top: 20px; text-align: left; }
 
-    const TERMS_AND_CONDITIONS = {
-        flights: `<h3>✈️ Tiquetes Aéreos</h3><ul><li>Valores e itinerarios sujetos a cambios.</li><li>Se debe realizar el pago total inmediato.</li><li>Tiquetes en tarifa básica (artículo personal).</li></ul>`,
-        hotels: `<h3>🏨 Hoteles</h3><ul><li>Reserva con pago parcial. Saldo 45 días antes del viaje.</li><li>Cambios sujetos a disponibilidad y penalidades.</li></ul>`,
-        transfers: `<h3>🚐 Traslados</h3><ul><li>Traslados adicionales por cambios de aeropuerto corren por cuenta del cliente.</li></ul>`
-    };
+/* Fieldsets */
+.form-fieldset { 
+    background-color: var(--c-white);
+    border: none; 
+    border-radius: 16px; 
+    padding: 25px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+.form-fieldset legend { 
+    font-weight: 700; 
+    font-size: 18px; 
+    padding: 5px 15px; 
+    background-color: var(--c-brand-dark-accent); 
+    color: var(--c-white); 
+    border-radius: 20px;
+}
 
-    const REGIMEN_TEMPLATES = {
-        'todo_incluido': `Todo incluido: Desayunos, almuerzos, cenas, snacks y bebidas ilimitadas.`,
-        'pension_completa': `Pensión Completa: Desayuno, almuerzo y cena.`,
-        'media_pension': `Media Pensión: Desayuno y cena.`,
-        'desayuno': `Alojamiento y Desayuno.`,
-        'solo_hotel': `Solo alojamiento.`
-    };
+.sub-fieldset { border: 2px dashed #e9ecef; border-radius: 12px; padding: 20px; margin-top: 15px; position: relative; }
+.sub-fieldset > label { color: var(--c-brand-primary); font-weight: 700; font-size: 15px; margin-bottom: 15px; display: block; }
 
-    // --- FUNCIÓN PRINCIPAL DE LA APP ---
-    function initializeApp() {
-        let pastedImages = {};
-        let hotelCounter = 0;
-        const form = document.getElementById('pre-reserva-form');
-        const formTitleSection = document.getElementById('form-title-section');
-        const formSection = document.getElementById('form-section');
-        const confirmationSection = document.getElementById('confirmation-section');
-        const processQuoteBtn = document.getElementById('process-quote-btn');
-        const newQuoteBtn = document.getElementById('new-quote-btn');
-        const loaderOverlay = document.getElementById('loader-overlay');
-        const dynamicComponentsContainer = document.getElementById('dynamic-components-container');
-        const confirmationComponentsContainer = document.getElementById('confirmation-components-container');
-        const advisorSelect = document.getElementById('asesor');
-        const advisorWhatsappInput = document.getElementById('whatsapp-asesor');
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-grid.small-gap { gap: 15px; }
+.form-group { display: flex; flex-direction: column; position: relative; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--c-dark-blue); }
 
-        const requiredFieldsConfig = {
-            'flights': ['ciudad-salida', 'flight-1-airline', 'flight-1-price'],
-            'tours': ['tour-1-name', 'tour-1-price'],
-            'transfers': ['transfer-1-desc', 'transfer-1-price']
-        };
+/* Inputs */
+.form-group input, .form-group textarea, .form-group select { 
+    width: 100%; 
+    padding: 12px 15px; 
+    border-radius: 8px; 
+    border: 1px solid #eee; 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 15px; 
+    box-sizing: border-box; 
+    background-color: #f9f9f9;
+    transition: all 0.2s; 
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--c-brand-primary); box-shadow: 0 0 0 3px rgba(254, 128, 80, 0.2); background-color: #fff; }
+input[readonly] { background-color: #e9ecef; cursor: not-allowed; color: var(--c-gray); }
 
-        function addSection(sectionKey) {
-            if (sectionKey === 'hotel') {
-                hotelCounter++;
-                const template = document.getElementById('template-hotel');
-                if (!template) return;
+.currency-group { display: flex; gap: 10px; }
+.currency-group input { flex-grow: 1; }
+.currency-group select { width: 100px; }
 
-                let cloneHtml = template.innerHTML.replace(/PLACEHOLDER/g, hotelCounter);
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = cloneHtml;
-                const cloneNode = tempDiv.firstElementChild;
+/* Botones de Acción */
+.submit-button { display: inline-block; width: 100%; background-color: var(--c-brand-primary); color: var(--c-white); padding: 16px; border-radius: 12px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; margin-top: 30px; transition: background-color 0.2s; box-shadow: 0 4px 15px rgba(254, 128, 80, 0.4); }
+.submit-button:hover { background-color: #e56b3e; transform: translateY(-2px); }
 
-                dynamicComponentsContainer.appendChild(cloneNode);
+/* Botones de Añadir Componentes */
+.add-buttons-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; padding: 20px; background-color: #f0f2f5; border-radius: 12px; }
+.add-section-btn, .add-subsection-btn { flex-grow: 1; display: block; text-align: center; background-color: var(--c-white); border: 1px solid var(--c-brand-dark-accent); color: var(--c-brand-dark-accent); font-weight: 600; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.add-section-btn:hover, .add-subsection-btn:hover { background-color: var(--c-brand-dark-accent); color: var(--c-white); }
+.add-subsection-btn { grid-column: 1 / -1; margin-top: 10px; border-style: dashed; }
 
-                const nightsSelect = document.getElementById(`cantidad-noches-${hotelCounter}`);
-                for (let i = 1; i <= 30; i++) {
-                    const option = new Option(`${i} noche${i > 1 ? 's' : ''}`, i);
-                    if (i === 4) option.selected = true;
-                    nightsSelect.add(option);
-                }
-                const roomsSelect = document.getElementById(`cantidad-habitaciones-${hotelCounter}`);
-                for (let i = 1; i <= 10; i++) {
-                    const option = new Option(`${i} habitación${i > 1 ? 'es' : ''}`, i);
-                    if (i === 1) option.selected = true;
-                    roomsSelect.add(option);
-                }
-                
-                addEventListenersToSection(cloneNode);
-                
-                if (hotelCounter === 1) document.querySelector(`.add-section-btn[data-section="hotel"]`).style.display = 'none';
-                if (hotelCounter > 1) document.querySelector(`#hotel-form-wrapper-${hotelCounter - 1} .add-subsection-btn`).style.display = 'none';
-            } else {
-                const template = document.getElementById(`template-${sectionKey}`);
-                if (!template) return;
-                const clone = template.content.cloneNode(true);
-                dynamicComponentsContainer.appendChild(clone);
-                addEventListenersToSection(dynamicComponentsContainer.querySelector(`#${sectionKey}-form-wrapper`));
-                document.querySelector(`.add-section-btn[data-section="${sectionKey}"]`).style.display = 'none';
-                updateRequiredFields(sectionKey, true);
-            }
-        }
+.remove-section-btn { position: absolute; top: 10px; right: 10px; background-color: #ffeaea; color: #ff4d4f; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; line-height: 32px; text-align: center; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+.remove-section-btn:hover { background-color: #ff4d4f; color: white; transform: rotate(90deg); }
 
-        function removeSection(sectionKey) {
-            if (sectionKey.startsWith('hotel-')) {
-                const wrapper = document.getElementById(`hotel-form-wrapper-${sectionKey.split('-')[1]}`);
-                if (wrapper) {
-                    wrapper.remove();
-                    if (document.querySelectorAll('.hotel-form-wrapper').length === 0) {
-                        document.querySelector(`.add-section-btn[data-section="hotel"]`).style.display = 'block';
-                        hotelCounter = 0;
-                    } else {
-                        const lastHotel = Array.from(document.querySelectorAll('.hotel-form-wrapper')).pop();
-                        lastHotel.querySelector('.add-subsection-btn').style.display = 'block';
-                    }
-                }
-            } else {
-                const originalWrapper = document.getElementById(`${sectionKey}-form-wrapper`);
-                if (originalWrapper) {
-                    originalWrapper.remove();
-                    document.querySelector(`.add-section-btn[data-section="${sectionKey}"]`).style.display = 'block';
-                    updateRequiredFields(sectionKey, false);
-                }
-            }
-        }
+/* Áreas de Pegado de Fotos */
+.paste-area { border: 2px dashed #ccc; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; background-color: #fdfdfd; min-height: 100px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; transition: border-color 0.2s; }
+.paste-area:hover { border-color: var(--c-brand-primary); background-color: #fffbf8; }
+.paste-area p { color: #aaa; font-weight: 500; margin: 0; font-size: 13px; }
+.paste-area img { max-width: 100%; max-height: 150px; border-radius: 8px; object-fit: cover; }
+.gallery-paste-areas { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.gallery-paste-areas .paste-area { min-height: 120px; }
+.gallery-paste-areas img { width: 100%; height: 100%; }
 
-        function addSubSection(subSectionKey) {
-            if (subSectionKey === 'hotel') addSection('hotel');
-            else {
-                const wrapper = document.getElementById(`${subSectionKey}-form-wrapper`);
-                if (wrapper) {
-                    wrapper.style.display = 'block';
-                    document.querySelector(`.add-subsection-btn[data-subsection="${subSectionKey}"]`).style.display = 'none';
-                    updateRequiredFields(subSectionKey, true);
-                }
-            }
-        }
-        
-        function removeSubSection(subSectionKey) {
-            const wrapper = document.getElementById(`${subSectionKey}-form-wrapper`);
-            if (wrapper) {
-                wrapper.style.display = 'none';
-                wrapper.querySelectorAll('input').forEach(input => input.value = '');
-                document.querySelector(`.add-subsection-btn[data-subsection="${subSectionKey}"]`).style.display = 'block';
-                updateRequiredFields(subSectionKey, false);
-            }
-        }
+/* =========================================
+   ESTILOS DE LA COTIZACIÓN (PDF)
+   ========================================= */
+#confirmation-section { padding-bottom: 40px; }
 
-        function updateRequiredFields(key, isRequired) {
-            (requiredFieldsConfig[key] || []).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.required = isRequired;
-            });
-        }
-        
-        form.addEventListener('click', e => {
-            const { target } = e;
-            const { section, subsection } = target.dataset;
-            if (target.matches('.add-section-btn')) addSection(section);
-            if (target.matches('.remove-section-btn')) removeSection(section);
-            if (target.matches('.add-subsection-btn')) addSubSection(section || subsection);
-            if (target.matches('.remove-section-btn[data-subsection]')) removeSubSection(subsection);
-        });
+/* Header Banner Playa */
+.confirmation-header { 
+    background-image: url('https://i.imgur.com/UwQUg2M.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 250px;
+    border-radius: 24px 24px 0 0;
+    padding: 0; margin: 0;
+}
+.confirmation-header img { display: none; }
 
-        function handlePaste(e) {
-            e.preventDefault();
-            const pasteArea = e.currentTarget; const imageId = pasteArea.dataset.imgId;
-            const item = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
-            if (item) {
-                const reader = new FileReader();
-                reader.onload = event => {
-                    const base64Image = event.target.result;
-                    const previewImg = pasteArea.querySelector('img');
-                    previewImg.src = base64Image;
-                    previewImg.style.display = 'block';
-                    pasteArea.querySelector('p').style.display = 'none';
-                    pastedImages[imageId] = base64Image;
-                };
-                reader.readAsDataURL(item.getAsFile());
-            }
-        }
+.voucher-content { padding: 30px; text-align: center; }
+.confirmation-title-image { display: block; margin: 0 auto 25px auto; max-width: 400px; width: 100%; height: auto; }
 
-        function addEventListenersToSection(sectionElement) {
-            sectionElement.querySelectorAll('.paste-area').forEach(area => area.addEventListener('paste', handlePaste));
-        }
+/* Banner Amarillo - Cotización */
+.confirmation-pill {
+    background-color: var(--c-brand-yellow);
+    color: var(--c-dark-blue);
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 90%;
+    text-transform: uppercase;
+}
+.confirmation-pill svg { width: 24px; height: 24px; stroke-width: 3; }
 
-        function populateMainDropdowns() {
-            const adultsSelect = document.getElementById('adultos');
-            const ninosSelect = document.getElementById('ninos');
-            for (let i = 1; i <= 20; i++) {
-                const option = new Option(i, i);
-                if (i === 2) option.selected = true;
-                adultsSelect.add(option);
-            }
-            for (let i = 0; i <= 10; i++) {
-                const text = i === 0 ? '0' : (i === 1 ? '1 niño' : `${i} niños`);
-                ninosSelect.add(new Option(text, i));
-            }
-        }
+/* Cajas de Datos Cliente */
+.customer-data-box { background-color: var(--c-white); border: 1px solid #eee; padding: 20px; border-radius: 16px; margin-bottom: 25px; text-align: left; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.customer-data-box p { margin: 0 0 8px 0; font-size: 14px; color: var(--c-gray); }
+.customer-data-box strong { color: var(--c-brand-dark-accent); font-weight: 700; font-size: 15px; }
 
-        function initializeForm() {
-            form.reset();
-            pastedImages = {};
-            hotelCounter = 0;
-            dynamicComponentsContainer.innerHTML = '';
-            document.querySelectorAll('.add-section-btn').forEach(btn => btn.style.display = 'block');
-            advisorSelect.innerHTML = '<option value="" disabled selected>Selecciona tu nombre</option>' + Object.keys(ADVISORS).map(id => `<option value="${id}">${ADVISORS[id].name}</option>`).join('');
-            advisorSelect.dispatchEvent(new Event('change'));
-            populateMainDropdowns();
-            const now = new Date();
-            document.getElementById('cotizacion-numero').value = `COT-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-        }
+/* Caja Asesor */
+#advisor-box { display: flex; align-items: center; gap: 20px; background-color: #f0f8ff; border: 1px solid #d1e9ff; padding: 20px; border-radius: 16px; text-align: left; }
+#advisor-photo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--c-white); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.advisor-info { flex-grow: 1; }
+.advisor-info p { margin: 0; font-size: 13px; color: var(--c-gray); }
+.advisor-info h3 { font-size: 20px; color: var(--c-dark-blue); margin: 3px 0 0 0; }
+.single-contact-btn { background-color: var(--c-success-green); color: var(--c-white); padding: 8px 20px; text-decoration: none; font-weight: 700; border-radius: 50px; font-size: 13px; display: inline-block; transition: background-color 0.2s; }
+.single-contact-btn:hover { background-color: #26a65b; }
 
-        advisorSelect.addEventListener('change', () => {
-            const selectedAdvisor = ADVISORS[advisorSelect.value];
-            if (selectedAdvisor) advisorWhatsappInput.value = selectedAdvisor.defaultWhatsapp;
-        });
+/* Cajas de Opciones (Hotel, Vuelos, etc) */
+.quote-option-box, .component-section { border: none; border-radius: 16px; margin-top: 25px; overflow: hidden; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.05); background-color: var(--c-white); }
+.option-header, .component-section h3 { background-color: var(--c-brand-dark-accent); color: var(--c-white); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+.option-header h3, .component-section h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--c-white); }
+.option-price { font-size: 20px; font-weight: 900; background-color: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 8px; }
+.option-body { padding: 25px; }
+.option-body h4 { font-size: 22px; font-weight: 800; margin-bottom: 20px; color: var(--c-brand-primary); }
 
-        function validateForm() {
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                alert('Por favor, completa todos los campos obligatorios.');
-                return false;
-            }
-            if (dynamicComponentsContainer.children.length === 0) {
-                alert('Debes añadir al menos un componente.');
-                return false;
-            }
-            return true;
-        }
+/* Galería y Detalles */
+.photo-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.photo-gallery img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
+.single-photo-container img { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; }
 
-        const toggleLoader = (show, text = "Generando PDF...") => {
-            loaderOverlay.style.display = show ? 'flex' : 'none';
-            if(document.getElementById('loader-text')) document.getElementById('loader-text').textContent = text;
-        };
+.details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.data-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; }
+.data-item.full-width { grid-column: 1 / -1; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+.data-item svg { width: 20px; height: 20px; color: var(--c-brand-primary); flex-shrink: 0; margin-top: 2px; }
+.data-item-content strong { display: block; font-size: 12px; color: var(--c-gray); text-transform: uppercase; margin-bottom: 2px; }
+.data-item-content p { margin: 0; font-weight: 600; color: var(--c-dark); }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return 'N/A';
-            const date = new Date(dateStr + 'T00:00:00');
-            return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-        }
+/* Items de Vuelos/Tours */
+.item-option { background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--c-brand-primary); display: flex; justify-content: space-between; align-items: center; }
+.item-price { font-weight: 800; color: var(--c-brand-dark-accent); }
+.flight-banner img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 15px; }
 
-        function formatCurrency(value, currency = 'COP') {
-            const number = parseFloat(String(value).replace(/[^0-9.-]+/g, ""));
-            if (isNaN(number) || !String(value).trim()) return '';
-            return number.toLocaleString(currency === 'COP' ? 'es-CO' : 'en-US', { style: 'currency', currency, minimumFractionDigits: currency === 'COP' ? 0 : 2, maximumFractionDigits: currency === 'COP' ? 0 : 2 });
-        }
+/* Footer PDF */
+.details-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; text-align: left; }
+.payment-plan-box, .inclusions-box { background-color: #fff8e1; border: 1px solid #ffe082; padding: 20px; border-radius: 16px; } /* Fondo amarillito suave */
+.inclusions-box { background-color: #e3f2fd; border-color: #bbdefb; } /* Fondo azulito suave */
+.payment-plan-box h4, .inclusions-box h4 { font-size: 16px; color: var(--c-dark-blue); margin-bottom: 10px; font-weight: 800; }
+.payment-plan-box p, .inclusions-box p { font-size: 13px; margin: 0 0 8px 0; line-height: 1.5; color: var(--c-gray); white-space: pre-wrap; }
 
-        function populateQuote() {
-            const advisorKey = advisorSelect.value;
-            const advisor = ADVISORS[advisorKey];
-            const advisorWhatsapp = advisorWhatsappInput.value;
-            const clientName = document.getElementById('nombre-completo').value;
-            const quoteNumber = document.getElementById('cotizacion-numero').value;
-            const adults = document.getElementById('adultos').value;
-            const children = document.getElementById('ninos').value;
+/* Botones CTA Finales */
+.main-cta-container { text-align: center; padding: 30px; margin-top: 30px; background-color: var(--c-white); border-radius: 16px; border: 1px solid #eee; }
+.main-cta-container h3 { font-size: 22px; margin-bottom: 20px; color: var(--c-dark-blue); }
+.main-cta-button { display: block; text-decoration: none; color: var(--c-white); padding: 15px; border-radius: 50px; font-size: 18px; font-weight: 700; margin-bottom: 10px; transition: transform 0.2s; }
+.main-cta-button.reserve { background-color: var(--c-brand-primary); box-shadow: 0 4px 15px rgba(254, 128, 80, 0.4); }
+.main-cta-button.reserve:hover { transform: scale(1.02); }
+.main-cta-button.contact { background-color: var(--c-dark-blue); font-size: 15px; padding: 12px; }
 
-            document.getElementById('confirm-intro-text').textContent = `¡Hola, ${clientName.split(' ')[0].toUpperCase()}! He preparado estas opciones para tu próximo viaje.`;
+/* Footer Logos */
+.voucher-footer { padding: 30px 20px; text-align: center; border-top: 1px solid #eee; margin-top: 20px; }
+.airline-logos { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; filter: grayscale(100%); opacity: 0.7; }
+.airline-logos img { height: 30px; width: auto; }
 
-            const customerBox = document.getElementById('confirm-customer-data-box');
-            customerBox.innerHTML = `<p>Para: <strong>${clientName.toUpperCase()}</strong></p><p>Pasajeros: <strong>${adults} Adulto${adults > 1 ? 's' : ''}${children > 0 ? ` y ${children} Niño${children > 1 ? 's' : ''}` : ''}</strong></p><p>Nº Cotización: <strong>${quoteNumber}</strong> | Validez: <strong>${document.getElementById('validez-cupos').value}</strong></p>`;
+/* Botones Finales de la App */
+.action-buttons { margin-top: 40px; display: flex; gap: 15px; justify-content: center; padding: 0 20px; }
+.action-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 30px; border-radius: 12px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; flex-grow: 1; }
+.action-button.download { background-color: var(--c-brand-primary); color: var(--c-white); box-shadow: 0 4px 15px rgba(254, 128, 80, 0.3); }
+.action-button.download:hover { background-color: #e56b3e; }
+.action-button.secondary { background-color: var(--c-white); color: var(--c-dark-blue); border: 1px solid #eee; }
+.action-button.secondary:hover { background-color: #f9f9f9; }
 
-            document.getElementById('advisor-photo').src = advisor.photoUrl;
-            document.getElementById('advisor-name').textContent = advisor.name;
+/* Loader */
+#loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.95); display: none; justify-content: center; align-items: center; z-index: 1000; flex-direction: column; color: var(--c-brand-dark-accent); font-weight: 700; }
+.spinner { border: 6px solid #eee; border-top: 6px solid var(--c-brand-dark-accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px; }
 
-            const whatsappLink = `https://wa.me/${advisorWhatsapp}`;
-            const whatsappLinksIds = ['advisor-whatsapp-btn', 'cta-reservar', 'cta-contactar', 'footer-wpp-link'];
-            whatsappLinksIds.forEach(id => {
-                const el = document.getElementById(id);
-                const baseText = id === 'cta-reservar' ? `¡Hola ${advisor.name}! Estoy listo para reservar según la cotización *${quoteNumber}*.` : `Hola ${advisor.name}, tengo una pregunta sobre la cotización *${quoteNumber}*.`;
-                el.href = `${whatsappLink}?text=${encodeURIComponent(baseText)}`;
-            });
+/* Login Styles */
+#login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--c-light-gray); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+#login-box { background-color: var(--c-bg-card); padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; }
+.login-logo { max-width: 250px; margin-bottom: 20px; }
+#login-box h2 { font-size: 24px; color: var(--c-dark-blue); margin-bottom: 10px; }
+#login-box p { color: var(--c-dark-blue); opacity: 0.8; margin-bottom: 25px; }
+#login-form input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid transparent; background-color: var(--c-white); font-family: 'Poppins', sans-serif; font-size: 16px; text-align: center; margin-bottom: 15px; }
+#login-form button { width: 100%; background-color: var(--c-brand-primary); color: var(--c-white); padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: background-color 0.2s; }
+#login-form button:hover { background-color: #e56b3e; }
 
-            confirmationComponentsContainer.innerHTML = '';
-
-            const hotelForms = document.querySelectorAll('.hotel-form-wrapper');
-            hotelForms.forEach((form, index) => {
-                const num = form.id.match(/\d+/)[0];
-                let galleryHTML = [1, 2, 3].map(i => pastedImages[`hotel-${num}-foto-${i}`] ? `<img src="${pastedImages[`hotel-${num}-foto-${i}`]}">` : '').join('');
-                let hotelDetailsHTML = `
-                    <div class="data-item">${ICONS.destination}<div class="data-item-content"><strong>Destino:</strong><p>${document.getElementById(`destino-${num}`).value}</p></div></div>
-                    <div class="data-item">${ICONS.calendar}<div class="data-item-content"><strong>Fechas:</strong><p>${formatDate(document.getElementById(`fecha-viaje-${num}`).value)}</p></div></div>
-                    <div class="data-item">${ICONS.moon}<div class="data-item-content"><strong>Noches:</strong><p>${document.getElementById(`cantidad-noches-${num}`).options[document.getElementById(`cantidad-noches-${num}`).selectedIndex].text}</p></div></div>
-                    <div class="data-item">${ICONS.bed}<div class="data-item-content"><strong>Habitaciones:</strong><p>${document.getElementById(`cantidad-habitaciones-${num}`).options[document.getElementById(`cantidad-habitaciones-${num}`).selectedIndex].text}</p></div></div>`;
-                
-                confirmationComponentsContainer.innerHTML += `
-                    <div class="quote-option-box">
-                        <div class="option-header"><h3>Hotel ${index + 1}</h3><span class="option-price">${formatCurrency(document.getElementById(`valor-total-${num}`).value, document.getElementById(`moneda-${num}`).value)}</span></div>
-                        <div class="option-body">
-                            <h4>${document.getElementById(`hotel-${num}`).value}</h4>
-                            <div class="photo-gallery">${galleryHTML || '<p>No se añadieron imágenes.</p>'}</div>
-                            <div class="details-grid">
-                                ${hotelDetailsHTML}
-                                <div class="data-item full-width">${ICONS.check}<div class="data-item-content"><strong>Plan Incluye:</strong><p>${REGIMEN_TEMPLATES[document.getElementById(`regimen-${num}`).value] || 'No especificado'}</p></div></div>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-
-            if (document.getElementById('flights-form-wrapper')) {
-                const departureCity = document.getElementById('ciudad-salida').value;
-                let optionsHTML = [1, 2].map(i => {
-                    const wrapper = document.getElementById(`flight-${i}-form-wrapper`);
-                    if ((i === 1 || (wrapper && wrapper.style.display !== 'none')) && document.getElementById(`flight-${i}-airline`)) {
-                        const airline = document.getElementById(`flight-${i}-airline`).value; const price = document.getElementById(`flight-${i}-price`).value;
-                        if (airline && price) return `<div class="item-option"><strong>Opción ${i}:</strong> ${airline} <span class="item-price">Desde ${formatCurrency(price)}</span></div>`;
-                    } return '';
-                }).join('');
-                confirmationComponentsContainer.innerHTML += `<div class="component-section"><h3>Vuelos Sugeridos</h3>${pastedImages['flight-banner-preview'] ? `<div class="flight-banner"><img src="${pastedImages['flight-banner-preview']}"></div>` : ''}<div id="flight-options-confirm-container"><div class="data-item">${ICONS.plane}<div class="data-item-content"><strong>Desde:</strong><p>${departureCity}</p></div></div>${optionsHTML}</div><p class="item-disclaimer">*Valores por persona, sujetos a cambio.</p></div>`;
-            }
-
-            ['tours', 'transfers'].forEach(type => {
-                if (document.getElementById(`${type}-form-wrapper`)) {
-                    const imgHTML = pastedImages[`${type.slice(0, -1)}-main-photo`] ? `<div class="single-photo-container"><img src="${pastedImages[`${type.slice(0, -1)}-main-photo`]}"></div>` : '';
-                    const nameKey = type === 'tours' ? 'name' : 'desc';
-                    const desc = document.getElementById(`${type.slice(0, -1)}-1-${nameKey}`).value; const price = document.getElementById(`${type.slice(0, -1)}-1-price`).value;
-                    confirmationComponentsContainer.innerHTML += `<div class="component-section"><h3>${type === 'tours' ? 'Tours Opcionales' : 'Traslados'}</h3><div class="option-body">${imgHTML}<div class="item-option">${desc}<span class="item-price">Desde ${formatCurrency(price)}</span></div></div></div>`;
-                }
-            });
-
-            document.getElementById('confirm-pago-reserva').textContent = formatCurrency(document.getElementById('pago-reserva').value);
-            document.getElementById('confirm-pago-segundo').textContent = formatCurrency(document.getElementById('pago-segundo').value);
-            document.getElementById('confirm-fecha-limite').textContent = document.getElementById('fecha-limite-pago').value;
-            document.getElementById('confirm-no-incluye').textContent = document.getElementById('no-incluye').value;
-
-            let termsHTML = '';
-            if (document.querySelector('.hotel-form-wrapper')) termsHTML += TERMS_AND_CONDITIONS.hotels;
-            if (document.getElementById('flights-form-wrapper')) termsHTML += TERMS_AND_CONDITIONS.flights;
-            if (document.getElementById('transfers-form-wrapper')) termsHTML += TERMS_AND_CONDITIONS.transfers;
-            
-            const termsContainer = document.getElementById('terms-section-confirm');
-            if (termsHTML) {
-                document.getElementById('confirm-terms-content').innerHTML = termsHTML;
-                termsContainer.style.display = 'block';
-            } else {
-                termsContainer.style.display = 'none';
-            }
-        }
-
-        async function processQuote() {
-            toggleLoader(true, "Generando PDF...");
-            processQuoteBtn.disabled = true;
-            try {
-                const elementToPrint = document.getElementById('voucher-to-print');
-                const canvas = await html2canvas(elementToPrint, { scale: 2, useCORS: true, logging: true });
-                const pdf = new window.jspdf.jsPDF({ orientation: 'p', unit: 'px', format: [canvas.width, canvas.height] });
-                pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, canvas.width, canvas.height);
-                
-                const scaleFactor = canvas.width / elementToPrint.offsetWidth;
-                ['advisor-whatsapp-btn', 'cta-reservar', 'cta-contactar', 'footer-wpp-link'].forEach(id => {
-                    const element = document.getElementById(id); if (!element || !element.href) return;
-                    const rect = element.getBoundingClientRect(); const containerRect = elementToPrint.getBoundingClientRect();
-                    pdf.link((rect.left - containerRect.left) * scaleFactor, (rect.top - containerRect.top) * scaleFactor, rect.width * scaleFactor, rect.height * scaleFactor, { url: element.href });
-                });
-                
-                pdf.save(`Cotizacion_${document.getElementById('cotizacion-numero').value}_${document.getElementById('nombre-completo').value.replace(/ /g, '_')}.pdf`);
-                alert("¡ÉXITO!\n\nLa cotización ha sido descargada en tu equipo.");
-                
-            } catch (error) { console.error("Error en el proceso:", error); alert(`Hubo un error: ${error.message}`); } 
-            finally { toggleLoader(false); processQuoteBtn.disabled = false; }
-        }
-
-        form.addEventListener('submit', e => { e.preventDefault(); if (!validateForm()) return; populateQuote(); formTitleSection.style.display = 'none'; formSection.style.display = 'none'; confirmationSection.style.display = 'block'; window.scrollTo(0, 0); });
-        processQuoteBtn.addEventListener('click', processQuote);
-        newQuoteBtn.addEventListener('click', () => { confirmationSection.style.display = 'none'; formTitleSection.style.display = 'block'; formSection.style.display = 'block'; initializeForm(); window.scrollTo(0, 0); });
-        
-        initializeForm();
-    }
-
-    // --- MANEJADOR DEL LOGIN ---
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (passwordInput.value.trim() === ACCESS_PASSWORD) {
-            loginOverlay.style.display = 'none';
-            mainWrapper.style.display = 'block';
-            initializeApp(); // Inicia la app solo si la contraseña es correcta
-        } else {
-            loginError.style.display = 'block';
-            passwordInput.value = '';
-        }
-    });
-
-});
+@media (max-width: 768px) {
+    .wrapper { margin: 0; border-radius: 0; }
+    .section, .voucher-content { padding: 20px; }
+    .form-grid, .gallery-paste-areas, .details-section, .details-grid { grid-template-columns: 1fr; }
+    .action-buttons { flex-direction: column; }
+    #advisor-box { flex-direction: column; text-align: center; }
+}
