@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'María_Camila': { name: 'María Camila Ramirez Rodas', photoUrl: 'https://i.imgur.com/SdubRgH.jpeg', defaultWhatsapp: '573113173286' },
         'Sarah_George': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/MCSsvz9.jpeg', defaultWhatsapp: '573332313485' },
         'Ana_Isabel': { name: 'Ana Isabel Buitrago García', photoUrl: 'https://i.imgur.com/b7LIglY.jpeg', defaultWhatsapp: '573217598780' },
-        'maryory_gonzalez': { name: 'Maryory Gonzalez', photoUrl: 'https://i.imgur.com/G9nHKlg.jpeg', defaultWhatsapp: '573189150322' },
-        'Carolina_Muñoz': { name: 'Carolina Muñoz', photoUrl: 'https://i.imgur.com/sXnamkJ.jpeg', defaultWhatsapp: '573113855927' }
+        'Nicol_Dayanna': { name: 'Nicol Dayanna Tamayo Buitrago', photoUrl: 'https://i.imgur.com/7diSD8P.jpeg', defaultWhatsapp: '573003895626' },
+        'Alejandra_Arroyo': { name: 'Alejandra Arroyo García', photoUrl: 'https://i.imgur.com/aeMOvMs.jpeg', defaultWhatsapp: '573137449530' }
     };
 
     const ICONS = {
