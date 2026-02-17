@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Sarah_George': { name: 'Sarah George Esteves', photoUrl: 'https://i.imgur.com/MCSsvz9.jpeg', defaultWhatsapp: '573332313485' },
         'Ana_Isabel': { name: 'Ana Isabel Buitrago García', photoUrl: 'https://i.imgur.com/b7LIglY.jpeg', defaultWhatsapp: '573217598780' },
         'Nicol_Dayanna': { name: 'Nicol Dayanna Tamayo Buitrago', photoUrl: 'https://i.imgur.com/7diSD8P.jpeg', defaultWhatsapp: '573003895626' },
+        'Oriana_Villabos': { name: 'Oriana Villalobos Miranda', photoUrl: 'https://i.imgur.com/bsnOhuX.jpeg', defaultWhatsapp: '573108472004' },
         'Alejandra_Arroyo': { name: 'Alejandra Arroyo García', photoUrl: 'https://i.imgur.com/aeMOvMs.jpeg', defaultWhatsapp: '573137449530' }
     };
 
